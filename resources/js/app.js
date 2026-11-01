@@ -1,4 +1,5 @@
 import '../css/app.css';
+import 'font-awesome/css/font-awesome.css';
 import './bootstrap';
 
 import { createInertiaApp } from '@inertiajs/vue3';

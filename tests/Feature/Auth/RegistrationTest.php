@@ -19,7 +19,8 @@ class RegistrationTest extends TestCase
     public function test_new_users_can_register(): void
     {
         $response = $this->post('/register', [
-            'name' => 'Test User',
+            'firstname' => 'Test',
+            'lastname' => 'User',
             'email' => 'test@example.com',
             'password' => 'password',
             'password_confirmation' => 'password',
@@ -27,5 +28,22 @@ class RegistrationTest extends TestCase
 
         $this->assertAuthenticated();
         $response->assertRedirect(route('dashboard', absolute: false));
+        $this->assertDatabaseHas('users', [
+            'firstname' => 'Test',
+            'lastname' => 'User',
+            'email' => 'test@example.com',
+        ]);
+    }
+
+    public function test_firstname_and_lastname_are_required(): void
+    {
+        $response = $this->post('/register', [
+            'email' => 'test@example.com',
+            'password' => 'password',
+            'password_confirmation' => 'password',
+        ]);
+
+        $response->assertSessionHasErrors(['firstname', 'lastname']);
+        $this->assertGuest();
     }
 }

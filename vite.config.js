@@ -34,7 +34,14 @@ export default defineConfig({
             ],
             refresh: true,
         }),
-        vue(),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false, // Key: disable Vite from processing absolute paths
+                },
+            },
+        }),
         tailwindcss(),
     ],
 });
