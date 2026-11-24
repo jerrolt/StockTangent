@@ -1,10 +1,12 @@
 <script setup>
-import { onUnmounted, ref, watch } from 'vue';
+import { computed, onUnmounted, ref, watch } from 'vue';
 import AppButton from '@/Components/AppButton.vue';
 
 const props = defineProps({
     result: { type: Object, required: true },
 });
+
+const subject = computed(() => props.result.inventory ?? props.result.organization);
 
 const dismissed = ref(false);
 const fading = ref(false);
@@ -43,8 +45,8 @@ watch(() => props.result, (_result, _previous, onCleanup) => {
     fading.value = false;
     dismissTimer = setTimeout(() => {
         fading.value = true;
-        fadeTimer = setTimeout(() => { dismissed.value = true; }, 1000);
-    }, 1000);
+        fadeTimer = setTimeout(() => { dismissed.value = true; }, 3000);
+    }, 5000);
     onCleanup(clearTimers);
 }, { immediate: true });
 
@@ -69,7 +71,7 @@ onUnmounted(clearTimers);
         <div class="min-w-0 flex-1">
             <h2 class="text-base font-bold text-slate-900">{{ result.status === 'error' ? 'Action could not be completed' : 'Action completed successfully' }}</h2>
             <p class="mt-1 text-sm leading-relaxed text-slate-600">{{ result.message }}</p>
-            <p v-if="result.organization && !result.message.startsWith(result.organization.name + ':')" class="mt-2 break-words text-sm font-bold text-slate-800">{{ result.organization.name }}</p>
+            <p v-if="subject && !result.message.startsWith(subject.name + ':')" class="mt-2 break-words text-sm font-bold text-slate-800">{{ subject.name }}</p>
             <ul v-if="result.details?.length" class="mt-2 list-inside list-disc space-y-1 text-sm text-red-700">
                 <li v-for="detail in result.details" :key="detail">{{ detail }}</li>
             </ul>
@@ -92,7 +94,7 @@ onUnmounted(clearTimers);
 
 .action-result-banner.is-fading {
     opacity: 0;
-    transition: opacity 1s ease-out;
+    transition: opacity 5s ease-out;
 }
 
 @media (prefers-reduced-motion: reduce) {

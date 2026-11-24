@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\OrganizationRequest;
 use App\Models\Organization;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -37,9 +38,9 @@ class OrganizationController extends Controller
         return Inertia::render('Organizations/Create');
     }
 
-    public function store(Request $request): RedirectResponse
+    public function store(OrganizationRequest $request): RedirectResponse
     {
-        $data = $this->validatedData($request);
+        $data = $request->validated();
 
         try {
             $organization = DB::transaction(function () use ($request, $data) {
@@ -64,10 +65,9 @@ class OrganizationController extends Controller
         return Inertia::render('Organizations/Edit', ['organization' => $organization]);
     }
 
-    public function update(Request $request, Organization $organization): RedirectResponse
+    public function update(OrganizationRequest $request, Organization $organization): RedirectResponse
     {
-        Gate::authorize('update', $organization);
-        $data = $this->validatedData($request);
+        $data = $request->validated();
 
         try {
             $organization->update($data);
@@ -121,22 +121,5 @@ class OrganizationController extends Controller
                 'organization' => $organization ? ['id' => $organization->id, 'name' => $organization->name] : null,
                 'nextAction' => $organization ? ($nextAction ?? ($organization->trashed() ? 'restore' : 'delete')) : null,
             ]);
-    }
-
-    private function validatedData(Request $request): array
-    {
-        if (is_string($request->input('state'))) {
-            $request->merge(['state' => strtoupper(trim($request->input('state')))]);
-        }
-
-        return $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'address_line1' => ['nullable', 'string', 'max:255'],
-            'address_line2' => ['nullable', 'string', 'max:255'],
-            'city' => ['nullable', 'string', 'max:100'],
-            'state' => ['nullable', 'string', 'regex:/^[A-Z]{2}$/'],
-            'postal_code' => ['nullable', 'string', 'max:50'],
-            'description' => ['nullable', 'string', 'max:10000'],
-        ]);
     }
 }

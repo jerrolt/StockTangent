@@ -45,6 +45,12 @@ const showingNavigationDropdown = ref(false);
                                 >
                                     Organizations
                                 </NavLink>
+                                <NavLink :href="route('inventories.index')" :active="route().current('inventories.*')">
+                                    Inventories
+                                </NavLink>
+                                <NavLink :href="route('members.index')" :active="route().current('members.*')">
+                                    Members
+                                </NavLink>
                             </div>
                         </div>
 
@@ -81,6 +87,9 @@ const showingNavigationDropdown = ref(false);
                                             :href="route('profile.edit')"
                                         >
                                             Profile
+                                        </DropdownLink>
+                                        <DropdownLink :href="route('profile.inventory')">
+                                            My Inventories
                                         </DropdownLink>
                                         <DropdownLink
                                             :href="route('logout')"
@@ -158,6 +167,9 @@ const showingNavigationDropdown = ref(false);
                         >
                             Organizations
                         </ResponsiveNavLink>
+                        <ResponsiveNavLink :href="route('inventories.index')" :active="route().current('inventories.*')">
+                            Inventories
+                        </ResponsiveNavLink>
                     </div>
 
                     <!-- Responsive Settings Options -->
@@ -178,6 +190,9 @@ const showingNavigationDropdown = ref(false);
                         <div class="mt-3 space-y-1">
                             <ResponsiveNavLink :href="route('profile.edit')">
                                 Profile
+                            </ResponsiveNavLink>
+                            <ResponsiveNavLink :href="route('profile.inventory')" :active="route().current('profile.inventory')">
+                                My Inventories
                             </ResponsiveNavLink>
                             <ResponsiveNavLink
                                 :href="route('logout')"

@@ -67,8 +67,8 @@ const tones = {
                         class="break-words font-bold tracking-tight"
                         :class="variant === 'primary' ? 'text-2xl leading-tight text-slate-900 sm:text-3xl' : ['text-lg leading-snug sm:text-xl', tones[tone].heading]"
                     >{{ title }}</component>
-                    <span v-if="count !== null" class="inline-flex min-w-7 items-center justify-center rounded-full border px-2.5 py-0.5 text-xs font-bold tabular-nums" :class="tones[tone].badge">
-                        <span class="sr-only">Total: </span>{{ count }}
+                    <span v-if="count !== null" class="inline-flex min-w-7 items-center justify-center rounded-full border px-2.5 py-0.5 text-sm font-normal tabular-nums" :class="tones[tone].badge">
+                        <span class="not-sr-only">Total:&nbsp;</span>{{ count }}
                     </span>
                 </div>
                 <p v-if="description" class="mt-1 text-sm leading-relaxed text-slate-600">{{ description }}</p>

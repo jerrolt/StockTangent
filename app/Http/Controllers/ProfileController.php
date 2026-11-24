@@ -13,6 +13,25 @@ use Inertia\Response;
 
 class ProfileController extends Controller
 {
+
+    /**
+     * Display the user's inventory.
+     */
+    public function inventory(Request $request): Response
+    {
+        $user = $request->user();
+
+        return Inertia::render('Profile/Inventory', [
+            'user' => [
+                ...$user->toArray(),
+                'inventories' => $user->ownedInventories()->get(),
+            ],
+        ]);
+    }
+
+
+
+
     /**
      * Display the user's profile form.
      */

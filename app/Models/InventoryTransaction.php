@@ -12,7 +12,7 @@ class InventoryTransaction extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['inventory_id', 'user_id', 'type', 'reference_number', 'notes'];
+    protected $fillable = ['inventory_id', 'user_id', 'type', 'status', 'reference_number', 'notes'];
 
     protected function casts(): array
     {

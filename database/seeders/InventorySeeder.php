@@ -44,11 +44,12 @@ class InventorySeeder extends Seeder
                 }
             }
 
-            $inventories = collect([
-                Inventory::factory()->forOrganization($organization)->create(['name' => 'Shared Supplies']),
+            $sharedInventory = Inventory::factory()->forOrganization($organization)->create(['name' => 'Shared Supplies']);
+            $inventories = [
+                $sharedInventory,
                 Inventory::factory()->create(['user_id' => $admin->id, 'name' => 'Admin Supplies']),
                 Inventory::factory()->create(['user_id' => $member->id, 'name' => 'Member Supplies']),
-            ]);
+            ];
 
             foreach ($inventories as $inventory) {
                 $owner = $inventory->user_id === $member->id ? $member : $admin;
@@ -65,12 +66,14 @@ class InventorySeeder extends Seeder
                     'inventory_id' => $inventory->id,
                     'user_id' => $owner->id,
                     'type' => 'purchase',
+                    'status' => 'completed',
                     'notes' => 'Initial stock purchase.',
                 ]);
                 $usage = InventoryTransaction::factory()->create([
                     'inventory_id' => $inventory->id,
                     'user_id' => $member->id,
                     'type' => 'usage',
+                    'status' => 'completed',
                     'notes' => 'Sample supply usage.',
                 ]);
 
@@ -103,6 +106,19 @@ class InventorySeeder extends Seeder
                         'notes' => 'Removed from stock.',
                     ]);
                 }
+            }
+
+            foreach ([
+                'pending' => 'Restock request awaiting approval.',
+                'processing' => 'Restock order being prepared by the supplier.',
+                'failed' => 'Restock order payment failed.',
+                'cancelled' => 'Restock order cancelled before dispatch.',
+                'refunded' => 'Restock order refunded before delivery.',
+            ] as $status => $notes) {
+                InventoryTransaction::factory()->for($sharedInventory)->for($admin)->create([
+                    'status' => $status,
+                    'notes' => $notes,
+                ]);
             }
         });
     }

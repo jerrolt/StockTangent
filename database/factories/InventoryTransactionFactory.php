@@ -19,6 +19,7 @@ class InventoryTransactionFactory extends Factory
             'user_id' => fn (array $attributes) => Inventory::findOrFail($attributes['inventory_id'])->user_id
                 ?? User::factory()->create()->id,
             'type' => 'purchase',
+            'status' => 'pending',
             'reference_number' => fake()->unique()->bothify('PO-########'),
             'notes' => fake()->sentence(),
         ];
